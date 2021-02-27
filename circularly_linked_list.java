@@ -70,9 +70,12 @@ class CircLinkedList{
     }
   } 
   public void insert(int index, int value){
-    if(last == null || index == 0){
+    if(last == null){
       append(value);
       return;
+    }else if(index == 0){
+    	prepend(value);
+	return;
     }
     if(index > getLength()-1){
       append(value);
