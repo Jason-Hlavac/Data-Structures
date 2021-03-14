@@ -1,0 +1,146 @@
+// package whatever; // don't place package name!
+
+import java.io.*;
+
+class Node{
+  Node next;
+  String key;
+  int value;
+  public Node(String key, int value){
+    this.key = key;
+    this.value = value;
+  }
+}
+
+class LinkedList{
+  Node head;
+  
+  public void prepend(String key, int value){
+    if(head == null){
+      head = new Node(key, value);
+    }
+    else{
+      Node newNode = new Node(key, value);
+      newNode.next = head;
+      head = newNode;
+    }
+  }
+  
+  public int findValue(String key){
+    Node current = head;
+    while(current != null && !current.key.equals(key)){
+      current = current.next;
+    }
+    if(current == null){
+      return -1;
+    }else{
+      return current.value;
+    }
+  }
+  
+  public void delete(String key){
+    if(head == null){
+      return;
+    }
+    if(head.key.equals(key)){
+      head = head.next;
+    }
+    Node current = head;
+    while(current.next != null && !current.next.equals(key)){
+      current = current.next;
+    }
+    if(current.next == null || !current.next.equals(key)){
+      return;
+    }
+    current.next = current.next.next;
+    return;
+  }
+  
+  public void print(){
+   Node current = head;
+   if(current == null){
+     return;
+   }
+   System.out.print("{");
+   while(current != null){
+     System.out.print("[" + current.key + " : " + Integer.toString(current.value) + "]");
+     current = current.next;
+   }
+   System.out.println("}");
+  }
+}
+
+class HashMap{
+  LinkedList[] hashMap;
+  int size;
+  public HashMap(int size){
+    this.size = size;
+    hashMap = new LinkedList[size];
+  }
+  
+  public void add(String key, int value){
+    int hash = djb2(key);
+    if(hashMap[hash] == null){
+      hashMap[hash] = new LinkedList();
+    }
+    if(hashMap[hash].findValue(key) != -1){
+      return;
+    }
+
+    hashMap[hash].prepend(key, value);
+    return;
+  }
+  
+  public void delete(String key){
+    int hash = djb2(key);
+    if(hashMap[hash] == null){
+      return;
+    }
+    hashMap[hash].delete(key);
+  }
+  
+  public int get(String key){
+    int hash = djb2(key);
+    if(hashMap[hash] == null){
+      return -1;
+    }
+    return(hashMap[hash].findValue(key));
+  }
+  
+  public void print(){
+    for(int hash = 0; hash < size;  hash++){
+      if(hashMap[hash] != null){
+        System.out.print( "Hash Value "+Integer.toString(hash) + ": ");
+        hashMap[hash].print();
+      }
+    }
+    return;
+  }
+  
+  public int djb2(String key){
+    int hash = 0;
+    for(int i = 0; i < 2; i++){
+      if(key.length() > i){
+        hash = key.charAt(i) + ((hash << 1) - hash);
+      }
+    }
+    return hash;
+  }
+}
+
+class MyCode {
+	public static void main (String[] args) {
+      HashMap l = new HashMap(253);
+      l.add("chicken", 123);
+      l.add("omega", 24);
+      l.add("keen", 83);
+      l.add("ken", 84);
+      l.add("check", 92);
+      l.add("l", 92);
+      l.add("~~", 4);
+      l.delete("checkheck");
+      l.delete("checkheck");
+      l.print();
+      System.out.println(l.get("kekw"));
+    }
+}
