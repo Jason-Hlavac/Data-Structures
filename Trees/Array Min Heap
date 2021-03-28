@@ -16,6 +16,15 @@ class MinHeapNode{
   }
 }
 
+class MinHeapTree{
+  MinHeapNode root;
+  
+  //public void arrToTree(int[] heap){
+    
+  //}
+  
+}
+
 class MinHeap{
   int size;
   int[] heap;
@@ -24,6 +33,20 @@ class MinHeap{
     this.maxSize = max;
     heap = new int[max];
     size = 0;
+  }
+  
+  public int getHeight(){
+    int height = 1;
+    int i = size;
+    while(i != 1){
+      i/=2;
+      height+=1;
+    }
+    return height;
+  }
+  
+  public int[] getHeap(){
+    return heap;
   }
   
   public boolean isEmpty(){
@@ -89,10 +112,9 @@ class MinHeap{
   }
   
   public void display(){
-    for(int i = 0; i < size-1; i++){
+    for(int i = 0; i < size; i++){
       System.out.print(heap[i] +", ");
     }
-    System.out.print(heap[size]);
   }
   
   public void swap(int index1, int index2){
@@ -156,7 +178,13 @@ class MyCode {
     h.add(9);
     h.add(0);
     h.add(10);
-    System.out.println(h.poll());
+    h.add(11);
+    h.add(94);
     h.display();
+    //System.out.println(h.poll());
+    System.out.println();
+    h.display();
+    System.out.println();
+    System.out.println(h.getHeight());
 	}
 }
