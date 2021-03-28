@@ -1,0 +1,162 @@
+// package whatever; // don't place package name!
+
+import java.io.*;
+import java.util.Arrays;
+
+class MinHeapNode{
+  MinHeapNode left;
+  MinHeapNode right;
+  MinHeapNode parent;
+  int value;
+  public MinHeapNode(int value){
+    this.value = value;
+    parent = null;
+    right = null;
+    left = null;
+  }
+}
+
+class MinHeap{
+  int size;
+  int[] heap;
+  int maxSize;
+  public MinHeap(int max){
+    this.maxSize = max;
+    heap = new int[max];
+    size = 0;
+  }
+  
+  public boolean isEmpty(){
+    return size == 0;
+  }
+  
+  public int peek(){
+    if(isEmpty()){
+      throw new IllegalStateException();
+    }
+    return heap[0];
+  }
+  
+  public int poll(){
+    if(isEmpty()){
+      throw new IllegalStateException();
+    }
+    int temp = heap[0];
+    heap[0] = heap[size-1];
+    size--;
+    heapifyDown();
+    return temp;
+  }
+  
+  public void add(int value){
+    expandArr();
+    heap[size] = value;
+    size++;
+    heapifyUp();
+    return; 
+  }
+  
+  public void heapifyDown(){
+    int current = 0;
+    while(hasLeftChild(current)){
+      if(heap[current] > heap[getLeftChildIndex(current)] || heap[current] > heap[getRightChildIndex(current)]){
+        if(heap[getLeftChildIndex(current)] > heap[getRightChildIndex(current)]){
+          swap(current, getRightChildIndex(current));
+          current = getRightChildIndex(current);
+        }else{
+          swap(current, getLeftChildIndex(current));
+          current = getLeftChildIndex(current);
+        }
+      }else{
+        return;
+      }
+    }
+    return;
+  }
+  
+  
+  public void heapifyUp(){
+    int current = size-1;
+    while(current > 0){
+      if(parent(current) > heap[current]){
+        swap(current, getParentIndex(current));
+        current = getParentIndex(current);
+      }else{
+        return;
+      }
+    }
+    return;
+  }
+  
+  public void display(){
+    for(int i = 0; i < size-1; i++){
+      System.out.print(heap[i] +", ");
+    }
+    System.out.print(heap[size]);
+  }
+  
+  public void swap(int index1, int index2){
+    int temp = heap[index1];
+    heap[index1] = heap[index2];
+    heap[index2] = temp;
+  }
+  
+  public void expandArr(){
+    if(size >= maxSize){
+    heap = Arrays.copyOf(heap, maxSize*2);
+    }
+    return;
+  }
+  
+  
+  public int leftChild(int index){
+    return(heap[getLeftChildIndex(index)]);
+  }
+  
+  public int rightChild(int index){
+    return(heap[getRightChildIndex(index)]);
+  }
+  
+  public int parent(int index){
+    return(heap[getParentIndex(index)]);
+  }
+  
+  public boolean hasLeftChild(int index){
+    return (!(getLeftChildIndex(index) >= size));
+  }
+  
+  public boolean hasRightChild(int index){
+    return (!(getRightChildIndex(index) >= size));
+  }
+  public boolean hasParent(int index){
+    return(index > size || index == 0);
+  }
+  
+  public int getLeftChildIndex(int parentIndex){
+    return ((parentIndex *2) +1);
+  }
+  
+  public int getRightChildIndex(int parentIndex){
+    return((parentIndex* 2) + 2);
+  }
+  
+  public int getParentIndex(int childIndex){
+    return(childIndex-1) /2;
+  }
+  
+}
+
+class MyCode {
+	public static void main (String[] args) {
+		MinHeap h = new MinHeap(15);
+    h.add(3);
+    h.add(7);
+    h.add(2);
+    h.add(1);
+    h.add(9);
+    h.add(0);
+    h.add(10);
+    System.out.println(h.poll());
+    h.display();
+	}
+}
