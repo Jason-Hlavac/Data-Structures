@@ -62,9 +62,9 @@ class DFS{
     this.marked = new boolean[graph.V];
     this.edgeTo = new int[graph.V];
     dfs(graph, start);
-    for(int i : edgeTo){
-      System.out.print(i + " ");
-    }
+    //for(int i : edgeTo){
+      //System.out.print(i + " ");
+    //}
   }
   public void dfs(Graph graph, int v){
     marked[v] = true;
@@ -75,7 +75,7 @@ class DFS{
       }
     }
   }
-  
+
   public ArrayList<Integer> pathTo(int t){
     if(hasPathTo(t) == false){
       return null;
@@ -95,6 +95,60 @@ class DFS{
   }
 }
 
+class BFS{
+   
+   boolean[] marked;
+   int[] edgeTo;
+   int s;
+   
+   public BFS(Graph graph, int start){
+     this.s = start;
+     marked = new boolean[graph.V];
+     edgeTo = new int[graph.V];
+     bfs(graph, s);
+   }
+   
+   public void bfs(Graph graph, int v){
+     LinkedList<Integer> q = new LinkedList<Integer>();
+     marked[v] = true;
+     
+     q.add(v);
+     
+     while(q.peek() != null){
+      int n = q.poll();
+      Iterable<Integer> adjList = graph.returnAdj(n);
+      
+
+       for(int i : adjList){
+         if(marked[i] == false){
+         marked[i] = true;
+         q.add(i);
+         edgeTo[i] = n;
+         }
+       }
+     }
+   }
+   
+    public ArrayList<Integer> pathTo(int t){
+    if(hasPathTo(t) == false){
+      return null;
+    }
+    ArrayList<Integer> path = new ArrayList<Integer>();
+    for(int i = t; i != s; i = edgeTo[i]){
+      path.add(i);
+      
+    }
+    path.add(s);
+    Collections.reverse(path);
+    return path;
+  }
+  
+  public boolean hasPathTo(int t){
+    return marked[t];
+  }
+}
+
+
 class MyCode {
 	public static void main (String[] args) {
 		Graph g = new Graph(9);
@@ -109,10 +163,18 @@ class MyCode {
     g.addEdge(6, 7);
     g.printGraph();
     DFS d = new DFS(g, 2);
+    BFS b = new BFS(g, 2);
     ArrayList<Integer> arr =  d.pathTo(7);
+    ArrayList<Integer> arr2 = b.pathTo(7);
    //System.out.println(d.hasPathTo(2));
    System.out.println();
+    System.out.print("DFS: ");
     for(int i : arr){
+      System.out.print(i + " ");
+    }
+    System.out.println();
+System.out.print("BFS: ");
+    for(int i : arr2){
       System.out.print(i + " ");
     }
     //System.out.println("test");
