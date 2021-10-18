@@ -1,0 +1,41 @@
+import datetime
+try:
+    from ipynb.fs.full.SHA256 import *
+except:
+    from SHA256.py import *
+
+class Block(object):
+    nonce = 0
+    def __init__(self, i, d, ts, prev, difficulty):
+        self.index = i
+        self.data = d
+        self.timestamp = ts
+        self.prevHash = prev
+        self.hash = SHA256(self.getIndexString() + self.getData() + self.getTimeStamp() + self.getPrevHash())
+        self.difficulty = difficulty
+
+        
+    def getIndexString(self):
+        return str(self.index)
+    def getIndexInt(self):
+        return int(self.index)
+    def getData(self):
+        return str(self.data)
+    def getTimeStamp(self):
+        return str(self.timestamp)
+    def getPrevHash(self):
+        return str(self.prevHash)
+    def getCurrHash(self):
+        return str(self.hash)
+    
+    def findBlock(self):
+        self.nonce = 0
+        while(not checkDifficulty(self, self.hash, self.nonce)):
+            self.nonce += 1
+    def checkDifficulty(self, currHash, currNonce):
+        newHash = SHA256(self.getIndexString() + self.getData() + self.getTimeStamp() + self.getPrevHash() +str(self.nonce))
+        binary = str("{0:256b}".format(int(newHash)))
+        if(binary [0: difficulty] == "0" * difficulty):
+            return True
+        else:
+            return False
