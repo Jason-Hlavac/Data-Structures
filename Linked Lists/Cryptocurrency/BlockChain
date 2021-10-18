@@ -1,0 +1,60 @@
+
+try:
+    from ipynb.fs.full.Block import *
+except:
+    from Block.py import *
+
+class BlockChain(object):
+    chain = [None for i in range(10000)]
+    generationInterval = 10
+    difficultyAdjustmentInterval = 10
+    def __init__(self, genesis, maxIndex, currentIndex):
+        
+        self.genesis = genesis
+        self.maxIndex = int(maxIndex)
+        self.currentIndex = int(currentIndex)
+        self.chain[0] = genesis
+        
+    def generateNextBlock(self, data):
+        newBlock = Block(self.currentIndex+1, data, datetime.now(), self.chain[self.currentIndex].hash, self.chain[currentIndex].difficulty)
+        if(validate(newBlock, self.chain[currentIndex])):
+            self.chain.append(newBlock)
+            self.currentIndex += 1
+    
+    def replaceChain(self, newChain):
+        if(validateChain(newChain) and len(newChain) > len(self.chain)):
+            self.chain = newChain
+    
+    def validateChain(self):
+        if(self.genesis == self.chain[0]):
+            for i in range(1, len(self.chain)):
+                if(not validate(self.chain[i], self.chain[i-1])):
+                    return False
+                return True
+        else:
+            return False
+    
+    def validate(newBlock, prevBlock):
+        return(validateBlock(newBlock, prevBlock) == True and validateBlockStructure(newBlock) == True)
+
+    def validateBlock(newBlock, prevBlock):
+        if(int(prevBlock.index) + 1 == newBlock.index and prevBlock.hash == newBlock.prevHash and SHA256(newBlock) == newBlock.hash):
+            return True
+        else:
+            return False
+        
+    def validateBlockStructure(newBlock):
+        if(type(newBlock.Index) == "int" and type(newBlock.data) == "str" and type(newBlock.timestamp)== "str" and type(newBlock.prevHash) == "str" and type(newBlock.hash) == "str"):
+            return True
+        else:
+            return False
+    def adjustDifficulty(self):
+        if(len(self.chain) > 10):
+            delta = self.chain[self.currentIndex]- self.chain[self.currentIndex-10]
+            if(delta >= self.generationInterval *2 and self.chain[currentIndex].difficulty < 255):
+                self.chain[currentIndex].difficulty += 1
+            elif(delta < self.generationInterval/2 and self.chain[currentIndex].difficulty > 1):
+                self.chain[currentIndex].difficulty -= 1
+    
+    
+    
